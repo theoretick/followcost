@@ -1,4 +1,11 @@
 #
+# title: followcost.rb
+# author: @theoretick
+# date: 06june2013
+# description: followcost.com replacement commandline implementation in Ruby
+#
+#####################################################################
+
 # https://gist.github.com/vosechu/ad9f79b353cfbf4a842d
 #
 # Followcost.com rated your friends in milliscobles, a fictitious unit
