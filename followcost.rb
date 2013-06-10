@@ -31,7 +31,6 @@
 #   https://dev.twitter.com/docs/api/1/get/search
 #####################################################################
 
-require 'minitest/autorun'
 require 'net/http'
 require 'json'
 require 'date' # to parse num of days
@@ -47,12 +46,13 @@ class FollowCost
   ##################################################
 
   def self.get_user_data()
-
+    ###
     if TEST_MODE == true
       puts 'WARNING:: TEST MODE: ON'
       puts 'SIMULATED DATA REQUESTS ONLY'
       return MOCK_DATA
     end
+    ###
 
     uri = URI("http://api.twitter.com/1/users/show.json?screen_name=#{@screen_name}")
     response_data = Net::HTTP.get_response(uri)
@@ -60,10 +60,9 @@ class FollowCost
   end
 
   def self.date_parser(date_string)
-    # parses text-string to return total number of days
-    # uses "modified julian day number" method to find diff from current
+    # parses string & return total number of days using 'julian day number'
     date = DateTime.parse(date_string)
-    today = Time.now.to_datetime
+    today = DateTime.now
     total = today.mjd - date.mjd
     total = 1 if total == 0  #to avoid division by zero
     return total
@@ -77,31 +76,10 @@ class FollowCost
   end
 
   # Main function, calls all children
-  def self.calculate(user)
+  def self.fetch(user)
     @screen_name = user
     @json_hash = get_user_data()
     @user_score = calculate_milliscobles()
     puts @user_score
-  end
-end
-
-# FollowCost.calculate('theoretick')
-
-##################################################
-# TESTS
-##################################################
-
-class TestFollowCost < MiniTest::Test
-
-  def test_date_parser
-    assert_equal 1646, FollowCost.date_parser("Sat Dec  6 18:22:15 2008")
-  end
-
-  def test_calculate_milliscobles
-    assert_equal 2.9441069258809236, FollowCost.calculate_milliscobles()
-  end
-
-  def test_followcost_complete_with_calculate
-    assert 2.9441069258809236, FollowCost.calculate('theoretick')
   end
 end
